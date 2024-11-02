@@ -7,10 +7,9 @@ val properties = Properties().apply {
 }
 
 val apiKey = properties.getProperty("API_KEY");
-val defaultWebClientId = properties.getProperty("default_web_client_id") ?: "YOUR_DEFAULT_WEB_CLIENT_ID"
+
 plugins {
     alias(libs.plugins.android.application)
-    id("com.google.gms.google-services")
 }
 
 android {
@@ -26,7 +25,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", "\"$apiKey\"")
-        buildConfigField("String", "DEFAULT_WEB_CLIENT_ID", "\"$defaultWebClientId\"")
     }
 
     buildFeatures {
@@ -50,9 +48,6 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
 
     implementation(libs.appcompat)
     implementation(libs.material)
