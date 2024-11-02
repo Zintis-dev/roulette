@@ -26,6 +26,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", "\"$apiKey\"")
+        manifestPlaceholders["API_KEY"] = properties["API_KEY"] ?: ""
     }
 
     buildFeatures {
