@@ -10,6 +10,7 @@ val apiKey = properties.getProperty("API_KEY");
 
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -55,6 +56,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.play.services.location)
     implementation(libs.volley)
+    implementation (libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
