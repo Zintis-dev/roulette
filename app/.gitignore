@@ -1,6 +1,4 @@
-#
 /build
+*.json
 #
 google-services.json
-#
-*.json
