@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
-    private Button signInButton, logoutButton;
+    private Button signInButton, logoutButton, rouletteButton;
     private SwitchCompat themeSwitch;
     private ConstraintLayout mainLayout; // Declare mainLayout here
     private boolean userX;
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
         themeSwitch = findViewById(R.id.theme_switch);
         mainLayout = findViewById(R.id.main_layout); // Initialize mainLayout
+        rouletteButton = findViewById(R.id.roulette_button);
 
         SharedPreferences sharedPreferences = getSharedPreferences("ThemePref", MODE_PRIVATE);
         boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
@@ -88,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
         });
 
-        getUserLocationAndFindPlaces(2000);
-
         Button mapButton = findViewById(R.id.directions_button);
         mapButton.setOnClickListener(v -> {
             if (!userX) {
@@ -110,6 +109,22 @@ public class MainActivity extends AppCompatActivity {
 
         signInButton.setOnClickListener(v -> signIn());
         logoutButton.setOnClickListener(v -> signOut());
+
+        rouletteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Place.list.isEmpty()) {
+                    getUserLocationAndFindPlaces(2000);
+                }
+                if (!Place.list.isEmpty()) {
+                    Place.populateRandomList();
+                    Intent intent = new Intent(MainActivity.this, RouletteActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, "No Places Found Nearby", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         updateView(mAuth.getCurrentUser());
     }

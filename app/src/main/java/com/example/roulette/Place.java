@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class Place {
     private String name;
@@ -23,6 +25,7 @@ public class Place {
     private double longitude;
 
     public static ArrayList<Place> list = new ArrayList<>();
+    public static ArrayList<Place> randomlySelected = new ArrayList<Place>();
 
     public Place(String name, String address, double latitude, double longitude) {
         this.name = name;
@@ -98,5 +101,21 @@ public class Place {
             e.printStackTrace();
             Log.e("Parse Error", "Error parsing place results", e);
         }
+    }
+
+    private static int getRandomInt() {
+        if (list.isEmpty()) {
+            return -1;
+        }
+        Random random = new Random();
+        return random.nextInt(list.size());
+    }
+
+    public static void populateRandomList() {
+        randomlySelected.clear();
+
+        int expectedListSize = Math.min(5, list.size());
+        Collections.shuffle(list);
+        randomlySelected.addAll(list.subList(0, expectedListSize));
     }
 }
