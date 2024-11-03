@@ -7,7 +7,7 @@ val properties = Properties().apply {
 }
 
 val apiKey = properties.getProperty("API_KEY");
-val defaultWebClientId = properties.getProperty("default_web_client_id");
+
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
@@ -28,7 +28,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", "\"$apiKey\"")
-        buildConfigField("String", "DEFAULT_WEB_CLIENT_ID", "\"$defaultWebClientId\"")
     }
 
     buildFeatures {
