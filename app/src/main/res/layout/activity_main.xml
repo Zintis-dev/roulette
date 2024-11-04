@@ -43,7 +43,7 @@
         android:layout_margin="16dp"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/blue"
-        android:text="Directions"
+        android:text="@string/location"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"

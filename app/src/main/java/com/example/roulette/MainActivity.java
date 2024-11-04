@@ -93,11 +93,11 @@ public class MainActivity extends AppCompatActivity {
 
         Button mapButton = findViewById(R.id.directions_button);
         mapButton.setOnClickListener(v -> {
-            if (!userX) {
-                Toast.makeText(MainActivity.this, "Please sign in to use this feature", Toast.LENGTH_SHORT).show();
-            } else {
+            if (userX) {
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 startActivity(intent);
+            } else {
+                Toast.makeText(MainActivity.this, "Please sign in to use this feature", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -117,14 +117,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (Place.list.isEmpty()) {
                     getUserLocationAndFindPlaces(2000);
-                }
-                if (!Place.list.isEmpty()) {
+                } else {
                     Place.populateRandomList();
                     Intent intent = new Intent(MainActivity.this, RouletteActivity.class);
                     startActivity(intent);
-                } else {
-                    Toast.makeText(MainActivity.this, "No Places Found Nearby", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 

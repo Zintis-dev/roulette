@@ -80,14 +80,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (task.isSuccessful() && task.getResult() != null) {
                     Location location = task.getResult();
                     LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                    LatLng destinationLocation = new LatLng(latitude, longitude);
 
-                    mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
-                    mMap.addMarker(new MarkerOptions().position(destinationLocation).title("Destination"));
-
+                    if (latitude != 0 && longitude != 0) {
+                        LatLng destinationLocation = new LatLng(latitude, longitude);
+                        mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
+                        mMap.addMarker(new MarkerOptions().position(destinationLocation).title("Destination"));
+                        drawRoute(userLocation, destinationLocation);
+                    }
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12f));
 
-                    drawRoute(userLocation, destinationLocation);
                 } else {
                     Log.e("MapActivity", "Unable to get current location");
                 }
