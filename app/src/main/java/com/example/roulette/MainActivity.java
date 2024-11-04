@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button signInButton, logoutButton, rouletteButton;
     private SwitchCompat themeSwitch;
-    private ConstraintLayout mainLayout; // Declare mainLayout here
+    private ConstraintLayout mainLayout;
     private boolean userX;
 
     @Override

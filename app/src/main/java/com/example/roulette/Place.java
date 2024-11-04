@@ -2,6 +2,7 @@ package com.example.roulette;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -10,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,15 +25,17 @@ public class Place {
     private String address;
     private double latitude;
     private double longitude;
+    private String photoUrl;
 
     public static ArrayList<Place> list = new ArrayList<>();
     public static ArrayList<Place> randomlySelected = new ArrayList<Place>();
 
-    public Place(String name, String address, double latitude, double longitude) {
+    public Place(String name, String address, double latitude, double longitude, String photoUrl) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.photoUrl = photoUrl;
 
         list.add(this);
     }
@@ -52,6 +56,8 @@ public class Place {
         return longitude;
     }
 
+    public String getPhotoUrl() { return photoUrl; }
+
     public static void addToList(Place place) {
         list.add(place);
     }
@@ -67,7 +73,7 @@ public class Place {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        parsePlaceResults(response, context);
+                        parsePlaceResults(response, context, apiKey);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -80,7 +86,7 @@ public class Place {
         queue.add(jsonObjectRequest);
     }
 
-    private static void parsePlaceResults(JSONObject response, Context context) {
+    private static void parsePlaceResults(JSONObject response, Context context, String apiKey) {
         try {
             JSONArray results = response.getJSONArray("results");
             for (int i = 0; i < results.length(); i++) {
@@ -92,7 +98,16 @@ public class Place {
                 double latitude = location.optDouble("lat", 0.0);
                 double longitude = location.optDouble("lng", 0.0);
 
-                Place place = new Place(name, address, latitude, longitude);
+                String photoUrl = null;
+                JSONArray photos = placeJson.optJSONArray("photos");
+                if (photos != null && photos.length() > 0) {
+                    String photoReference = photos.getJSONObject(0).optString("photo_reference");
+                    photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+                            + photoReference + "&key=" + apiKey;
+                }
+
+                Place place = new Place(name, address, latitude, longitude, photoUrl);
+                Log.d("Photo", photoUrl);
 
                 Log.d("Place Info", "Name: " + place.getName() + ", Address: " + place.getAddress() + ", Lat: " + place.getLatitude() + ", Lng: " + place.getLongitude());
             }
@@ -117,5 +132,15 @@ public class Place {
         int expectedListSize = Math.min(5, list.size());
         Collections.shuffle(list);
         randomlySelected.addAll(list.subList(0, expectedListSize));
+    }
+
+    public void loadImageIntoView(ImageView imageView) {
+        if (this.photoUrl !=null) {
+            Picasso.get()
+                    .load(photoUrl)
+                    .into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.dummy_image);
+        }
     }
 }

@@ -36,6 +36,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
 
         holder.placeName.setText(place.getName());
         holder.placeCategory.setText(place.getAddress()); // Set category if available
+        place.loadImageIntoView(holder.placeImage);
 
         final boolean isExpanded = position == expandedPosition;
         holder.placeDescription.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
