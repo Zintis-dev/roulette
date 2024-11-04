@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         rouletteButton = findViewById(R.id.roulette_button);
 
         SharedPreferences sharedPreferences = getSharedPreferences("ThemePref", MODE_PRIVATE);
+        userX = sharedPreferences.getBoolean("userX", false);
+
         boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
 
         // Set initial theme and background color based on saved preference
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
         userX = true;
+        rememberUserX();
     }
 
     @Override
@@ -199,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
             updateView(null);
             userX = false;
+            rememberUserX();
         });
     }
 
@@ -211,4 +215,11 @@ public class MainActivity extends AppCompatActivity {
             logoutButton.setVisibility(View.GONE);
         }
     }
+    private void rememberUserX() {
+        SharedPreferences sharedPreferences = getSharedPreferences("ThemePref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("userX", userX);
+        editor.apply();
+    }
+
 }
