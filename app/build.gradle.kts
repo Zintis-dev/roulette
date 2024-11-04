@@ -7,10 +7,12 @@ val properties = Properties().apply {
 }
 
 val apiKey = properties.getProperty("API_KEY");
-
+val defaultWebClientId = properties.getProperty("default_web_client_id");
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -26,6 +28,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_KEY", "\"$apiKey\"")
+        buildConfigField("String", "DEFAULT_WEB_CLIENT_ID", "\"$defaultWebClientId\"")
     }
 
     buildFeatures {
@@ -49,7 +52,13 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation ("com.google.android.gms:play-services-auth:20.5.0")
+    implementation ("com.google.firebase:firebase-auth:22.1.1")
+    implementation (libs.cardview)
+    implementation (libs.recyclerview)
 
+    implementation(libs.picasso)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -57,6 +66,7 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.volley)
     implementation (libs.play.services.maps)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

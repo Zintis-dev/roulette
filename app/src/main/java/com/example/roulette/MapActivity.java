@@ -1,24 +1,17 @@
 package com.example.roulette;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,9 +23,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-
-import com.google.android.gms.maps.MapFragment;
-
 import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -43,12 +33,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     ArrayList<Place> placesList = Place.list;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
 
+    private double latitude = 0, longitude = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        Intent intent = getIntent();
+        latitude = intent.getDoubleExtra("lat", 0.0);
+        longitude = intent.getDoubleExtra("long", 0.0);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_fragment);
@@ -84,14 +80,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (task.isSuccessful() && task.getResult() != null) {
                     Location location = task.getResult();
                     LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                    LatLng destinationLocation = new LatLng(placesList.get(1).getLatitude(), placesList.get(1).getLongitude());
 
-                    mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
-                    mMap.addMarker(new MarkerOptions().position(destinationLocation).title("Destination"));
-
+                    if (latitude != 0 && longitude != 0) {
+                        LatLng destinationLocation = new LatLng(latitude, longitude);
+                        mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
+                        mMap.addMarker(new MarkerOptions().position(destinationLocation).title("Destination"));
+                        drawRoute(userLocation, destinationLocation);
+                    }
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12f));
 
-                    drawRoute(userLocation, destinationLocation);
                 } else {
                     Log.e("MapActivity", "Unable to get current location");
                 }
