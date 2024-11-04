@@ -1,6 +1,7 @@
 package com.example.roulette;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -32,12 +33,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     ArrayList<Place> placesList = Place.list;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
 
+    private double latitude = 0, longitude = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        Intent intent = getIntent();
+        latitude = intent.getDoubleExtra("lat", 0.0);
+        longitude = intent.getDoubleExtra("long", 0.0);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_fragment);
@@ -73,7 +80,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (task.isSuccessful() && task.getResult() != null) {
                     Location location = task.getResult();
                     LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                    LatLng destinationLocation = new LatLng(placesList.get(1).getLatitude(), placesList.get(1).getLongitude());
+                    LatLng destinationLocation = new LatLng(latitude, longitude);
 
                     mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
                     mMap.addMarker(new MarkerOptions().position(destinationLocation).title("Destination"));

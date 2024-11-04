@@ -1,6 +1,7 @@
 package com.example.roulette;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,10 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         });
 
         holder.getDirectionsButton.setOnClickListener(v -> {
-            // Handle get directions click, e.g., open Google Maps with place coordinates
+            Intent intent = new Intent(context, MapActivity.class);
+            intent.putExtra("lat", place.getLatitude());
+            intent.putExtra("long", place.getLongitude());
+            context.startActivity(intent);
         });
     }
 
